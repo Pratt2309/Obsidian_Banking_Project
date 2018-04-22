@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<!-- Root Context: defines shared resources visible to all other web components -->
+	<bean id="loginDAO" class="com.pratt.fps.dao.LoginDAO"
+		scope="request" />
+	<bean id="accountDAO" class="com.pratt.fps.dao.AccountDAO"
+		scope="request" />
+	<bean id="employeeDAO" class="com.pratt.fps.dao.EmployeeDAO"
+		scope="request" />
+	<bean id="customerDAO" class="com.pratt.fps.dao.CustomerDAO"
+		scope="request" />
+	<bean id="transferDAO" class="com.pratt.fps.dao.TransferDAO"
+		scope="request" />
+	<bean id="idDAO" class="com.pratt.fps.dao.IdDAO" scope="request" />
+</beans>
