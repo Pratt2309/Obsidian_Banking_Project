@@ -135,8 +135,8 @@ public class EmployeeDashboard {
 	@RequestMapping(value = "/emp/swr", method = RequestMethod.POST)
 	public String sendWithReq(HttpServletRequest request, WithdrawDAO wDao) {
 		int ramount = Integer.parseInt(request.getParameter("amount"));
-		int raccountId = Integer.parseInt(request.getParameter("acctId"));
-		Employee remp = (Employee) request.getAttribute("mngrId");
+		int raccountId = Integer.parseInt(request.getParameter("accountId").trim());
+		int rempId = Integer.parseInt(request.getParameter("mngrId"));
 
 		String outView = "error";
 		try {
@@ -159,7 +159,7 @@ public class EmployeeDashboard {
 
 					if (txn != null) {
 						Accounts acc = wDao.getAcctDetails(raccountId);
-
+						Employee remp = wDao.getMngrDetails(rempId);
 						Request req = new Request();
 						req.setAccount(acc);
 						req.setAmount(ramount);

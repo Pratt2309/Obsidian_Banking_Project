@@ -82,6 +82,27 @@ public class WithdrawDAO extends DAO{
 
 	}
 	
+	public Employee getMngrDetails(int empId) throws Exception {
+		try {
+			Query q = getSession().createQuery("from Employee where empId = :empId");
+			q.setInteger("empId", empId);
+
+			Employee emp = (Employee) q.uniqueResult();
+			close();
+			if (emp != null) {
+
+				return emp;
+
+			}
+
+		} catch (HibernateException e) {
+			rollback();
+			throw new Exception("Could not retireve Account Details ", e);
+		}
+		return null;
+
+	}
+	
 	public Boolean updateTxnTbl(TxnDetails txnD) throws Exception {
 		Boolean b = false;
 		try {
@@ -124,8 +145,9 @@ public class WithdrawDAO extends DAO{
 		
 		try {
 			begin();
-			Query q = getSession().createQuery("from Employee where branchId = :branchId");
-			q.setInteger(":branchId", branchId);
+			Query q = getSession().createQuery("from Employee where branchId = :branchId and role = :role");
+			q.setInteger("branchId", branchId);
+			q.setString("role","Manager");
 			ArrayList<Employee> eL = (ArrayList<Employee>) q.list();
 			close();
 			if(eL != null) {

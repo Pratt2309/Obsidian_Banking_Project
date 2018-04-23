@@ -25,7 +25,7 @@
 					<td>${eL.firstName}</td>
 					<td>${eL.middleName}</td>
 					<td>${eL.lastName}</td>
-					<td><input type="radio" name="mngrId" value="${eL}" />${eL.empId}</td>
+					<td><input type="radio" name="mngrId" value="${eL.empId}" />${eL.empId}</td>
 				</tr>
 			</c:forEach>
 		</table>
