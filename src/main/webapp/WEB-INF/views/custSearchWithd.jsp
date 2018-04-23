@@ -41,16 +41,18 @@
 					<th>Middle Name</th>
 					<th>Last Name</th>
 					<th>Customer Number</th>
+					<th>Account Number</th>
 
 				</tr>
 				<c:forEach var="cL" items="${requestScope.cL}">
 
 					<tr>
-						<th>${cL.firstName}</th>
-						<th>${cL.middleName}</th>
-						<th>${cL.lastName}</th>
+						<th>${cL.fName}</th>
+						<th>${cL.mName}</th>
+						<th>${cL.lName}</th>
+						<th>${cL.custId}</th>
 						<th><button formaction="${contextPath}/emp/wb"
-								formmethod="get" name="custId" value="${cL.custId}">${cL.custId}</button></th>
+								formmethod="get" name="acctId" value="${cL.acctId}">${cL.acctId}</button></th>
 
 					</tr>
 				</c:forEach>

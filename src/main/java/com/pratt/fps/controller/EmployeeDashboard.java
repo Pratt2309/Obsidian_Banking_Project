@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -17,9 +18,12 @@ import com.pratt.fps.dao.AccountDAO;
 import com.pratt.fps.dao.CustomerDAO;
 import com.pratt.fps.dao.IdDAO;
 import com.pratt.fps.dao.TransferDAO;
+import com.pratt.fps.dao.WithdrawDAO;
 import com.pratt.fps.pojo.Accounts;
 import com.pratt.fps.pojo.Customer;
+import com.pratt.fps.pojo.Employee;
 import com.pratt.fps.pojo.IDdetails;
+import com.pratt.fps.pojo.Request;
 import com.pratt.fps.pojo.TrfBalDetails;
 import com.pratt.fps.pojo.TxnDetails;
 
@@ -128,17 +132,133 @@ public class EmployeeDashboard {
 
 	}
 
+	@RequestMapping(value = "/emp/swr", method = RequestMethod.POST)
+	public String sendWithReq(HttpServletRequest request, WithdrawDAO wDao) {
+		int ramount = Integer.parseInt(request.getParameter("amount"));
+		int raccountId = Integer.parseInt(request.getParameter("acctId"));
+		Employee remp = (Employee) request.getAttribute("mngrId");
+
+		String outView = "error";
+		try {
+			Accounts a = wDao.getAcctDetails(raccountId);
+			if (a != null) {
+				int currBal = a.getCurrentBalance() - ramount;
+				Boolean b = wDao.updateBal(a.getAccountId(), currBal);
+				if (b) {
+					TxnDetails txnD = new TxnDetails();
+					txnD.setFromAccountId(raccountId);
+					txnD.setAmount(ramount);
+					txnD.setMode("Teller Withdraw");
+					txnD.setStatus("Pending Manager Approval");
+					txnD.setTxnType("Bank Withdraw");
+					DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+					Date date = new Date();
+					txnD.setDate(String.valueOf(dateFormat.format(date)));
+
+					TxnDetails txn = wDao.getTxnId(txnD);
+
+					if (txn != null) {
+						Accounts acc = wDao.getAcctDetails(raccountId);
+
+						Request req = new Request();
+						req.setAccount(acc);
+						req.setAmount(ramount);
+						req.setEmployee(remp);
+						req.setTxn(txn);
+						Boolean d = wDao.sendWithdReq(req);
+						if (d) {
+							outView = "success";
+						}
+					}
+
+				}
+			}
+
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return outView;
+
+	}
+
 	@RequestMapping(value = "/emp/wb", method = RequestMethod.POST)
-	public String withdBalance(HttpServletRequest request) {
-		
-		System.out.println(request.getParameter("idtype"));
-		return "withdrawBalance";
+	public String withdBalance(HttpServletRequest request, WithdrawDAO wDao) {
+		String outView = "error";
+		int amount = Integer.parseInt(request.getParameter("amount"));
+		String idNum = request.getParameter("idnum");
+		String idType = request.getParameter("idtype");
+		int acctId = Integer.parseInt(request.getParameter("acctid"));
+
+		if (amount <= 500) {
+			try {
+				Accounts ac = wDao.getAcctDetails(acctId);
+				if (ac != null) {
+					int custId = ac.getCustomer().getCustId();
+					IDdetails idD = wDao.checkID(idNum);
+					if (idD != null) {
+						int cuId = idD.getCustomer().getCustId();
+						if (cuId == custId) {
+							if (idD.getIdNum().equals(idNum) && idD.getIdType().equals(idType)) {
+								int currBal = ac.getCurrentBalance();
+								if (amount > currBal) {
+									outView = "error";
+								} else {
+									currBal = currBal - amount;
+									Boolean b = wDao.updateBal(acctId, currBal);
+									if (b) {
+										TxnDetails txnD = new TxnDetails();
+										txnD.setAmount(amount);
+										txnD.setFromAccountId(acctId);
+										txnD.setMode("Teller Withdraw");
+										txnD.setStatus("Success");
+										txnD.setTxnType("Bank Withdraw");
+										DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+										Date date = new Date();
+										txnD.setDate(String.valueOf(dateFormat.format(date)));
+										Boolean c = wDao.updateTxnTbl(txnD);
+										if (c) {
+											outView = "success";
+										} else {
+											outView = "error";
+										}
+									}
+								}
+							}
+						}
+					}
+
+				}
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+		} else {
+			request.setAttribute("amount", amount);
+			request.setAttribute("acctId", acctId);
+			HttpSession session = request.getSession();
+			int branchId = (Integer) session.getAttribute("branchId");
+			try {
+				ArrayList<Employee> eL = wDao.getMgrs(branchId);
+				if (eL != null) {
+					request.setAttribute("eL", eL);
+				}
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+			outView = "sendWithdReq";
+		}
+
+		return outView;
 
 	}
 
 	@RequestMapping(value = "/emp/wb", method = RequestMethod.GET)
 	public String withdBalanceS(ModelMap model, HttpServletRequest request) {
-		
+
 		ArrayList<String> idList = new ArrayList<String>();
 
 		idList.add("State driver’s license");
@@ -150,14 +270,14 @@ public class EmployeeDashboard {
 		idList.add("Certificate of U.S. Naturalization");
 		idList.add("Mexican Consular Card");
 
-		int id = Integer.parseInt(request.getParameter("custId"));
-		request.setAttribute("custId", id);
+		int acctId = Integer.parseInt(request.getParameter("acctId"));
+		request.setAttribute("acctId", acctId);
 		request.setAttribute("idList", idList);
 
 		return "withdrawBalEmp";
 
 	}
-	
+
 	@RequestMapping(value = "/emp/csw", method = RequestMethod.GET)
 	public String custSearchWithd() {
 
@@ -166,7 +286,7 @@ public class EmployeeDashboard {
 	}
 
 	@RequestMapping(value = "/emp/csw", method = RequestMethod.POST)
-	public String custSearchWithd(HttpServletRequest request, ModelMap model, CustomerDAO cDao) {
+	public String custSearchWithd(HttpServletRequest request, ModelMap model, CustomerDAO cDao, TransferDAO tDao) {
 		String outView = null;
 		String fName = request.getParameter("fname");
 		String mName = request.getParameter("mname");
@@ -183,7 +303,7 @@ public class EmployeeDashboard {
 		}
 
 		try {
-			ArrayList<Customer> cL = cDao.custSearch(fName);
+			ArrayList<TrfBalDetails> cL = tDao.gettrfBalDetails(fName);
 			model.addAttribute("cL", cL);
 			outView = "custSearchWithd";
 

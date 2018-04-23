@@ -15,4 +15,7 @@
 	<bean id="transferDAO" class="com.pratt.fps.dao.TransferDAO"
 		scope="request" />
 	<bean id="idDAO" class="com.pratt.fps.dao.IdDAO" scope="request" />
+
+	<bean id="withdrawDAO" class="com.pratt.fps.dao.WithdrawDAO"
+		scope="request" />
 </beans>

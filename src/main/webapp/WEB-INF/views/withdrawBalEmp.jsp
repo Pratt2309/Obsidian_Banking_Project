@@ -31,11 +31,16 @@
 			</tr>
 
 			<tr>
-				<td>Customer ID:</td>
-				<td><input type="text" name="idnum" size="30"
-					value="${requestScope.custId}" /></td>
+				<td>Account ID:</td>
+				<td><input type="text" name="acctid" size="30"
+					value="${requestScope.acctId}" /></td>
 			</tr>
 
+			<tr>
+				<td>Amount:</td>
+				<td><input type="text" name="amount" size="30" /></td>
+			</tr>
+			
 			<tr>
 				<td><input type="submit" value="Withdraw Balance" /></td>
 			</tr>

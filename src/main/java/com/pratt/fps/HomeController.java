@@ -46,6 +46,7 @@ public class HomeController {
 		try {
 			Customer c = loginDAO.checkCustLogin(username, password);
 			if (c != null) {
+				
 				outView = "custDashboard";
 			} else {
 				map.addAttribute("errorMessage", "Invalid username/password!");
@@ -81,6 +82,9 @@ public class HomeController {
 				} else if (role.equals("Admin")) {
 					session.setAttribute("branchId", e.getBranchId());
 					outView = "adminDashboard";
+				} else if(role.equals("Manager")) {
+					session.setAttribute("branchId", e.getBranchId());
+					outView = "mngrDashboard";
 				}
 			} else {
 				map.addAttribute("errorMessage", "Invalid username/password!");

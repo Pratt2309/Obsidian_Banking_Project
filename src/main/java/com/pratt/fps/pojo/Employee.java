@@ -71,7 +71,7 @@ public class Employee {
 	String email1;
 
 	
-	@Column(name = "email2", unique = true, nullable = true)
+	@Column(name = "email2", unique = false, nullable = true)
 	String email2;
 
 	
