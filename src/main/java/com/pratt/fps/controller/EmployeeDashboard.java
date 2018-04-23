@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.pratt.fps.dao.AccountDAO;
 import com.pratt.fps.dao.CustomerDAO;
+import com.pratt.fps.dao.DepositDAO;
 import com.pratt.fps.dao.IdDAO;
 import com.pratt.fps.dao.TransferDAO;
 import com.pratt.fps.dao.WithdrawDAO;
@@ -120,16 +121,105 @@ public class EmployeeDashboard {
 
 	}
 
+	@RequestMapping(value = "/emp/csd", method = RequestMethod.GET)
+	public String custSearchDep() {
+
+		return "custSearchDep";
+
+	}
+
+	@RequestMapping(value = "/emp/csd", method = RequestMethod.POST)
+	public String custSearchDep(HttpServletRequest request, ModelMap model, TransferDAO tDao) {
+		String outView = null;
+		String fName = request.getParameter("fname");
+		String mName = request.getParameter("mname");
+		String lName = request.getParameter("lname");
+
+		if (fName == null) {
+			fName = "";
+		}
+		if (mName == null) {
+			mName = "";
+		}
+		if (lName == null) {
+			lName = "";
+		}
+
+		try {
+			ArrayList<TrfBalDetails> cL = tDao.gettrfBalDetails(fName);
+			model.addAttribute("cL", cL);
+			outView = "custSearchDep";
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			outView = "error";
+		}
+
+		return outView;
+
+	}
+
 	@RequestMapping(value = "/emp/db", method = RequestMethod.GET)
-	public String depBalance() {
-		return "depositBalance";
+	public String depBalance(ModelMap model, HttpServletRequest request) {
+		ArrayList<String> idList = new ArrayList<String>();
+
+		idList.add("State driver’s license");
+		idList.add("State-issued identification card");
+		idList.add("Military-issued identification card");
+		idList.add("Valid U.S. or foreign-issued passport");
+		idList.add("Permanent Resident Alien Card");
+		idList.add("Non-immigrant Visa");
+		idList.add("Certificate of U.S. Naturalization");
+		idList.add("Mexican Consular Card");
+
+		int acctId = Integer.parseInt(request.getParameter("acctId"));
+		request.setAttribute("acctId", acctId);
+		request.setAttribute("idList", idList);
+
+		return "depBalEmp";
 
 	}
 
 	@RequestMapping(value = "/emp/db", method = RequestMethod.POST)
-	public String depBalanceS() {
-		return "success";
+	public String depBalance(HttpServletRequest request, DepositDAO dDao) {
+		String outView = "error";
+		int amount = Integer.parseInt(request.getParameter("amount"));
+		String idNum = request.getParameter("idnum");
+		String idType = request.getParameter("idtype");
+		int acctId = Integer.parseInt(request.getParameter("acctid"));
 
+		try {
+			Accounts acd = dDao.getAcctDetails(acctId);
+			if (acd != null) {
+				IDdetails idD = dDao.checkID(idNum, idType);
+				if (idD != null) {
+					if (idD.getCustomer().getCustId() == acd.getCustomer().getCustId()) {
+						int currBal = acd.getCurrentBalance() + amount;
+						Boolean b = dDao.updateBal(acd.getAccountId(), currBal);
+						if (b) {
+							TxnDetails txnD = new TxnDetails();
+							txnD.setFromAccountId(acd.getAccountId());
+							txnD.setAmount(amount);
+							txnD.setMode("Teller Deposit");
+							txnD.setStatus("Success");
+							txnD.setTxnType("Bank Deposit");
+							DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+							Date date = new Date();
+							txnD.setDate(String.valueOf(dateFormat.format(date)));
+							Boolean c = dDao.updateTxnTbl(txnD);
+							if (c) {
+								outView = "success";
+							}
+						}
+					}
+				}
+
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return outView;
 	}
 
 	@RequestMapping(value = "/emp/swr", method = RequestMethod.POST)

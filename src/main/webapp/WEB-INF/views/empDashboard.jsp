@@ -12,7 +12,7 @@
 <form>
 <button formaction="${contextPath}/emp/tb">Transfer Balance</button>
 <button formaction="${contextPath}/emp/csw">Withdraw Balance</button>
-<button formaction="${contextPath}/emp/dep">Deposit Funds</button>
+<button formaction="${contextPath}/emp/csd">Deposit Funds</button>
 <button formaction="${contextPath}/emp/cs">Customer Summary</button>
 <button formaction="${contextPath}/emp/cc">Customer Creation</button>
 </form>
