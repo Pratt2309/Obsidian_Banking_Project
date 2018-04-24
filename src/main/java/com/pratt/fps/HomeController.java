@@ -78,12 +78,15 @@ public class HomeController {
 				String role = e.getRole();
 				if (role.equals("Executive")) {
 					session.setAttribute("branchId", e.getBranchId());
+					session.setAttribute("empId", e.getEmpId());
 					outView = "empDashboard";
 				} else if (role.equals("Admin")) {
 					session.setAttribute("branchId", e.getBranchId());
+					session.setAttribute("empId", e.getEmpId());
 					outView = "adminDashboard";
 				} else if(role.equals("Manager")) {
 					session.setAttribute("branchId", e.getBranchId());
+					session.setAttribute("empId", e.getEmpId());
 					outView = "mngrDashboard";
 				}
 			} else {

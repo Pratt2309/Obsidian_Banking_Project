@@ -30,6 +30,17 @@ public class Request {
 	@ManyToOne
 	Employee employee;
 
+	@Column(name = "reqStatus", nullable = false)
+	String reqStatus;
+
+	public String getReqStatus() {
+		return reqStatus;
+	}
+
+	public void setReqStatus(String reqStatus) {
+		this.reqStatus = reqStatus;
+	}
+
 	public Employee getEmployee() {
 		return employee;
 	}

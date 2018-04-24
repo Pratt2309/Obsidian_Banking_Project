@@ -15,6 +15,7 @@
 <button formaction="${contextPath}/emp/csd">Deposit Funds</button>
 <button formaction="${contextPath}/emp/cs">Customer Summary</button>
 <button formaction="${contextPath}/emp/cc">Customer Creation</button>
+<button formaction="${contextPath}/emp/us">Update Settings</button>
 </form>
 </body>
 </html>

@@ -18,4 +18,6 @@
 
 	<bean id="withdrawDAO" class="com.pratt.fps.dao.WithdrawDAO"
 		scope="request" />
+	<bean id="requestDAO" class="com.pratt.fps.dao.RequestDAO"
+		scope="request" />
 </beans>

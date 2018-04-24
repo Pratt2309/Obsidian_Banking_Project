@@ -96,7 +96,7 @@ public class EmployeeDashboard {
 						txnD.setAmount(tranfAmount);
 						txnD.setMode("Teller Transfer");
 						txnD.setStatus("Success");
-						txnD.setTxnType("Bank Transfer");
+						txnD.setTxnType("Transfer");
 						DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 						Date date = new Date();
 						txnD.setDate(String.valueOf(dateFormat.format(date)));
@@ -202,7 +202,7 @@ public class EmployeeDashboard {
 							txnD.setAmount(amount);
 							txnD.setMode("Teller Deposit");
 							txnD.setStatus("Success");
-							txnD.setTxnType("Bank Deposit");
+							txnD.setTxnType("Credit");
 							DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 							Date date = new Date();
 							txnD.setDate(String.valueOf(dateFormat.format(date)));
@@ -240,7 +240,7 @@ public class EmployeeDashboard {
 					txnD.setAmount(ramount);
 					txnD.setMode("Teller Withdraw");
 					txnD.setStatus("Pending Manager Approval");
-					txnD.setTxnType("Bank Withdraw");
+					txnD.setTxnType("Debit");
 					DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 					Date date = new Date();
 					txnD.setDate(String.valueOf(dateFormat.format(date)));
@@ -255,6 +255,7 @@ public class EmployeeDashboard {
 						req.setAmount(ramount);
 						req.setEmployee(remp);
 						req.setTxn(txn);
+						req.setReqStatus("Pending");
 						Boolean d = wDao.sendWithdReq(req);
 						if (d) {
 							outView = "success";
@@ -302,7 +303,7 @@ public class EmployeeDashboard {
 										txnD.setFromAccountId(acctId);
 										txnD.setMode("Teller Withdraw");
 										txnD.setStatus("Success");
-										txnD.setTxnType("Bank Withdraw");
+										txnD.setTxnType("Debit");
 										DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 										Date date = new Date();
 										txnD.setDate(String.valueOf(dateFormat.format(date)));
