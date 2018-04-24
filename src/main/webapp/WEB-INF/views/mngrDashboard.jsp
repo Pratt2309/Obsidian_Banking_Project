@@ -8,7 +8,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Insert title here</title>
+<title>Manager Dashboard</title>
 </head>
 <body>
 	<c:set var="contextPath" value="${pageContext.request.contextPath}" />

@@ -1,5 +1,10 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+<%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@page import="com.captcha.botdetect.web.servlet.Captcha"%>
+<%@taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
+<%@taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -8,32 +13,34 @@
 </head>
 <body>
 	<c:set var="contextPath" value="${pageContext.request.contextPath}" />
-	<form action="${contextPath}" method='POST'>
-	<table>
-		<tr>
-		    <td>Username:</td>
-		    <td><input type="text" name="username" size="30" required="required" /></td>
-		</tr>
-		
-		<tr>
-		    <td>Password:</td>
-		    <td><input type="password" name="password" size="30" required="required"/></td>
-		</tr>
-		
-		<tr>
-		    <td>Branch ID:</td>
-		    <td><input type="text" name="branchId" size="30" required="required"/></td>
-		</tr>
-		
-		<tr>
-		    <td colspan="2"><input type="submit" value="Login" /></td>
-		</tr>
-				
+	<form action="${contextPath}/employee/login.htm" method='POST'>
+		<table>
+			<tr>
+				<td>Username:</td>
+				<td><input type="text" name="username" size="30"
+					 /></td>
+			</tr>
+
+			<tr>
+				<td>Password:</td>
+				<td><input type="password" name="password" size="30"
+					/></td>
+			</tr>
+
+			<tr>
+				<td>Branch ID:</td>
+				<td><input type="text" name="branchId" size="30"
+					 /></td>
+			</tr>
+
+			<tr>
+				<td colspan="2"><input type="submit" value="Login" /></td>
+			</tr>
+
 		</table>
-		
-		
-		<a href="${contextPath}/employee/forgotpassword.htm">Forgot password?</a>	
-		<button formaction="${contextPath}/../../">Go Back</button>
-		</form>
+
+		<a href="${contextPath}/employee/forgotpassword">Forgot password?</a>
+		<button formaction="${contextPath}">Go Back</button>
+	</form>
 </body>
 </html>

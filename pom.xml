@@ -8,6 +8,13 @@
 	<name>FinalProject</name>
 	<packaging>war</packaging>
 	<version>1.0.0-BUILD-SNAPSHOT</version>
+	<repositories>
+		<repository>
+			<id>captcha</id>
+			<name>BotDetect Captcha Repository</name>
+			<url>https://git.captcha.com/maven.git/blob_plain/HEAD:/</url>
+		</repository>
+	</repositories>
 	<properties>
 		<java-version>1.6</java-version>
 		<org.springframework-version>3.1.1.RELEASE</org.springframework-version>
@@ -108,6 +115,17 @@
 			<groupId>javax.servlet</groupId>
 			<artifactId>jstl</artifactId>
 			<version>1.2</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.captcha</groupId>
+			<artifactId>botdetect-jsp20</artifactId>
+			<version>4.0.beta3.2</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-email</artifactId>
+			<version>1.5</version>
 		</dependency>
 
 		<dependency>

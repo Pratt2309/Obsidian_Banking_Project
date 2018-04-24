@@ -8,6 +8,7 @@ import com.pratt.fps.pojo.Employee;
 
 
 
+
 public class LoginDAO extends DAO {
 	
 	
@@ -53,6 +54,20 @@ public class LoginDAO extends DAO {
 			throw new Exception("Could not get user " + username, e);
 		}
 		return null;
+		
+	}
+	
+	public Employee getEmp(String userEmail){
+		try {
+			begin();
+			Query q = getSession().createQuery("from Employee where email1 = :email1");
+			q.setString("email1", userEmail);
+			Employee e = (Employee) q.uniqueResult();
+			return e;
+		}catch(Exception e){
+			System.out.println(e.getMessage());
+		}
+			return null;
 		
 	}
 }
