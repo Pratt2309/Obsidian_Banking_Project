@@ -8,14 +8,14 @@
 <title>Employee Dashboard</title>
 </head>
 <body>
-<c:set var="contextPath" value="${pageContext.request.contextPath}" />
-<form>
-<button formaction="${contextPath}/emp/tb">Transfer Balance</button>
-<button formaction="${contextPath}/emp/csw">Withdraw Balance</button>
-<button formaction="${contextPath}/emp/csd">Deposit Funds</button>
-<button formaction="${contextPath}/emp/cs">Customer Summary</button>
-<button formaction="${contextPath}/emp/cc">Customer Creation</button>
-<button formaction="${contextPath}/emp/us">Update Settings</button>
-</form>
+	<c:set var="contextPath" value="${pageContext.request.contextPath}" />
+	<form>
+		<button formaction="${contextPath}/emp/tb">Transfer Balance</button>
+		<button formaction="${contextPath}/emp/csw">Withdraw Balance</button>
+		<button formaction="${contextPath}/emp/csd">Deposit Funds</button>
+		<button formaction="${contextPath}/emp/cs">Customer Summary</button>
+		<button formaction="${contextPath}/emp/cc">Customer Creation</button>
+		<button formaction="${contextPath}/logout">Logout</button>
+	</form>
 </body>
 </html>

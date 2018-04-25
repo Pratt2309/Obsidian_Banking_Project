@@ -12,10 +12,10 @@
 </head>
 <body>
 	<c:set var="contextPath" value="${pageContext.request.contextPath}" />
-	<button formaction="${contextPath}/cust/tb">Transfer Balance</button>
-	<button formaction="${contextPath}/cust/fdc">FD Creation</button>
-	<button formaction="${contextPath}/cust/acs">Account Statement</button>
-	<button formaction="${contextPath}/cust/ccs">Credit Card
-		Statement</button>
+	<form>
+		<button formaction="${contextPath}/cust/acs">Account
+			Statement</button>
+		<button formaction="${contextPath}/logout">Logout</button>
+	</form>
 </body>
 </html>

@@ -29,8 +29,10 @@ public class MyFilter implements Filter {
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
 			throws IOException, ServletException {
 		System.out.println("inside filter class");
-		HttpServletRequest modifiedReq= new RequestWrapper((HttpServletRequest) request);
-		chain.doFilter(modifiedReq,response);
+		HttpServletRequest modifiedReq = new RequestWrapper((HttpServletRequest) request);
+
+		chain.doFilter(modifiedReq, response);
+
 	}
 
 	@Override

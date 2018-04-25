@@ -38,11 +38,12 @@ public class AdminDashboard {
 		int branchId = (Integer) session.getAttribute("branchId");
 		if(session.getAttribute("branchId") != null) {
 			command.setBranchId(branchId);
-			command.setUsername(command.getFirstName());
+			command.setUsername(request.getParameter("username"));
 			command.setPassword(command.getLastName());
 			try {
 				Boolean b = employeeDAO.empCreate(command);
 				if (b) {
+					sendEmail(command.getEmail1(), "Your password is : " + command.getPassword());
 					outView = "success";
 				}
 			} catch (Exception e) {
@@ -58,8 +59,7 @@ public class AdminDashboard {
 	
 	@RequestMapping(value = "/employee/forgotpassword", method = RequestMethod.GET)
 	public String getForgotPasswordForm(HttpServletRequest request) {
-		String v = "hello!";
-		System.out.println(v);
+		
 		return "forgot-password";
 	}
 	

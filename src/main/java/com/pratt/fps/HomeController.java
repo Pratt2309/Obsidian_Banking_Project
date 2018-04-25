@@ -1,6 +1,10 @@
 package com.pratt.fps;
 
+import java.io.IOException;
+
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
@@ -28,7 +32,7 @@ public class HomeController {
 	 */
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public String home() {
-		
+
 		return "home";
 	}
 
@@ -38,7 +42,8 @@ public class HomeController {
 	}
 
 	@RequestMapping(value = "/customer/login.htm", method = RequestMethod.POST)
-	public String custLoginCheck(HttpServletRequest request, LoginDAO loginDAO, ModelMap map) {
+	public String custLoginCheck(HttpServletRequest request, HttpServletResponse response, LoginDAO loginDAO,
+			ModelMap map) {
 		String outView = null;
 		String username = request.getParameter("username");
 		String password = request.getParameter("password");
@@ -46,7 +51,14 @@ public class HomeController {
 		try {
 			Customer c = loginDAO.checkCustLogin(username, password);
 			if (c != null) {
-				
+				String loginDetails = username + ":" + password;
+				Cookie cookie = new Cookie("loginDetails", loginDetails);
+				cookie.setMaxAge(60 * 60 * 24);
+				response.addCookie(cookie);
+				HttpSession session = request.getSession();
+				session.setAttribute("username", c.getUsername());
+				session.setAttribute("password", c.getPassword());
+				session.setAttribute("custId", c.getCustId());
 				outView = "custDashboard";
 			} else {
 				map.addAttribute("errorMessage", "Invalid username/password!");
@@ -65,26 +77,41 @@ public class HomeController {
 	}
 
 	@RequestMapping(value = "/employee/login.htm", method = RequestMethod.POST)
-	public String empLoginCheck(HttpServletRequest request, LoginDAO loginDAO, ModelMap map) {
+	public String empLoginCheck(HttpServletRequest request, HttpServletResponse response, LoginDAO loginDAO,
+			ModelMap map) {
 		String outView = null;
 		String username = request.getParameter("username");
 		String password = request.getParameter("password");
 		int branchId = Integer.parseInt(request.getParameter("branchId"));
 		HttpSession session = request.getSession();
-		
+
 		try {
 			Employee e = loginDAO.checkEmpLogin(username, password, branchId);
 			if (e != null) {
+				session.setAttribute("username", e.getUsername());
+				session.setAttribute("password", e.getPassword());
 				String role = e.getRole();
 				if (role.equals("Executive")) {
+					String loginDetails = username + ":" + password;
+					Cookie cookie = new Cookie("loginDetails", loginDetails);
+					cookie.setMaxAge(60 * 60 * 24);
+					response.addCookie(cookie);
 					session.setAttribute("branchId", e.getBranchId());
 					session.setAttribute("empId", e.getEmpId());
 					outView = "empDashboard";
 				} else if (role.equals("Admin")) {
+					String loginDetails = username + ":" + password;
+					Cookie cookie = new Cookie("loginDetails", loginDetails);
+					cookie.setMaxAge(60 * 60 * 24);
+					response.addCookie(cookie);
 					session.setAttribute("branchId", e.getBranchId());
 					session.setAttribute("empId", e.getEmpId());
 					outView = "adminDashboard";
-				} else if(role.equals("Manager")) {
+				} else if (role.equals("Manager")) {
+					String loginDetails = username + ":" + password;
+					Cookie cookie = new Cookie("loginDetails", loginDetails);
+					cookie.setMaxAge(60 * 60 * 24);
+					response.addCookie(cookie);
 					session.setAttribute("branchId", e.getBranchId());
 					session.setAttribute("empId", e.getEmpId());
 					outView = "mngrDashboard";
@@ -100,4 +127,17 @@ public class HomeController {
 		return outView;
 
 	}
+
+	@RequestMapping(value = "/logout", method = RequestMethod.GET)
+	public String logout(HttpServletRequest request, HttpServletResponse response) {
+		HttpSession session = request.getSession();
+		Cookie ck = new Cookie("loginDetails", "loginDetails");
+		ck.setMaxAge(0);
+		response.addCookie(ck);
+		session.invalidate();
+		String outView = "home";
+
+		return outView;
+	}
+
 }

@@ -8,8 +8,16 @@ import java.util.Date;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.mail.DefaultAuthenticator;
+import org.apache.commons.mail.Email;
+import org.apache.commons.mail.SimpleEmail;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -525,12 +533,14 @@ public class EmployeeDashboard {
 	public String custCreate(@ModelAttribute("customer") Customer command, ModelMap model, CustomerDAO customerDAO,
 			HttpServletRequest request) throws Exception {
 		String outView = null;
-		command.setUsername(command.getFirstName());
+
+		command.setUsername(request.getParameter("username"));
 		command.setPassword(command.getLastName());
 
 		try {
 			Boolean b = customerDAO.custCreate(command);
 			if (b) {
+				sendEmail(command.getEmail1(), "Your password is : " + command.getPassword());
 				outView = "success";
 			}
 		} catch (Exception e) {
@@ -540,5 +550,24 @@ public class EmployeeDashboard {
 
 		return outView;
 
+	}
+	
+	public void sendEmail(String useremail, String message) {
+
+		try {
+			Email email = new SimpleEmail();
+
+			email.setHostName("smtp.googlemail.com");
+			email.setSmtpPort(465);
+			email.setSSLOnConnect(true);
+			email.setAuthenticator(new DefaultAuthenticator("contactapplication2018@gmail.com", "springmvc"));
+			email.setFrom("no-reply@gmail.com");
+			email.setSubject("Account Activation!");
+			email.setMsg(message);
+			email.addTo(useremail);
+			email.send();
+		} catch (Exception e) {
+			System.out.println("Email can't be sent");
+		}
 	}
 }
