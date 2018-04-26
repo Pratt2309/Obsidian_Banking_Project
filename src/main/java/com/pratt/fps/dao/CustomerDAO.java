@@ -126,4 +126,20 @@ public class CustomerDAO extends DAO {
 		}
 
 	}
+
+	public Customer cuSe(int id) throws Exception {
+
+		try {
+			begin();
+			Query q = getSession().createQuery("from Customer where custId = :custId");
+			q.setInteger("custId", id);
+			Customer cust = (Customer) q.uniqueResult();
+			close();
+			return cust;
+		} catch (HibernateException e) {
+			rollback();
+			throw new Exception("Could not search Customer ", e);
+		}
+
+	}
 }

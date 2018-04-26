@@ -63,7 +63,9 @@
 			</tr>
 		</table>
 		<input type="submit" value="Export as Excel"
-			formaction="${contextPath}/csv/export" />
+			formaction="${contextPath}/csv/export" /> <a href="${contextPath}">Go
+			to Home</a>
+		<button formaction="${contextPath}/logout" formmethod="get">Logout</button>
 	</form>
 
 </body>

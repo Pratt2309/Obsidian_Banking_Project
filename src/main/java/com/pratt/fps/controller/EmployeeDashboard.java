@@ -188,6 +188,21 @@ public class EmployeeDashboard {
 
 	}
 
+	@RequestMapping(value = "/emp/cdp", method = RequestMethod.GET)
+	public String cdp(ModelMap model, HttpServletRequest request, CustomerDAO cDao) {
+
+		try {
+			Customer c = cDao.cuSe(10);
+			request.setAttribute("cu", c);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return "custDetails";
+
+	}
+
 	@RequestMapping(value = "/emp/db", method = RequestMethod.POST)
 	public String depBalance(HttpServletRequest request, DepositDAO dDao) {
 		String outView = "error";
@@ -536,6 +551,9 @@ public class EmployeeDashboard {
 
 		command.setUsername(request.getParameter("username"));
 		command.setPassword(command.getLastName());
+		String s1 = command.getStreetAddr1();
+		String s2 = "'" + s1 + "'";
+		command.setStreetAddr1(s2);
 
 		try {
 			Boolean b = customerDAO.custCreate(command);
@@ -551,7 +569,7 @@ public class EmployeeDashboard {
 		return outView;
 
 	}
-	
+
 	public void sendEmail(String useremail, String message) {
 
 		try {

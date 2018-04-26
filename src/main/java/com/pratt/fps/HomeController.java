@@ -37,8 +37,35 @@ public class HomeController {
 	}
 
 	@RequestMapping(value = "/customer/login.htm", method = RequestMethod.GET)
-	public String custLogin() {
-		return "customerlogin";
+	public String custLogin(HttpServletRequest request) {
+		String outView = "customerlogin";
+		HttpSession session = request.getSession(false);
+		String url = request.getRequestURI();
+		System.out.println(url);
+		System.out.println(request.getContextPath());
+		if (session != null) {
+			String sesUsername = (String) session.getAttribute("username");
+			String sesPassword = (String) session.getAttribute("password");
+			Cookie[] cks = request.getCookies();
+			if (cks != null) {
+				for (int i = 0; i < cks.length; i++) {
+					String name = cks[i].getName();
+					String value = cks[i].getValue();
+					if (name.equals("loginDetails")) {
+						String[] lD = value.split(":");
+						String usernm = (String) lD[0];
+						String pwd = (String) lD[1];
+						if (usernm.equals(sesUsername) && pwd.equals(sesPassword)) {
+							outView = "custDashboard";
+						} else {
+							outView = "customerlogin";
+						}
+
+					}
+				}
+			}
+		}
+		return outView;
 	}
 
 	@RequestMapping(value = "/customer/login.htm", method = RequestMethod.POST)
@@ -72,8 +99,11 @@ public class HomeController {
 	}
 
 	@RequestMapping(value = "/employee/login.htm", method = RequestMethod.GET)
-	public String empLogin() {
-		return "employeelogin";
+	public String empLogin(HttpServletRequest request, HttpServletResponse response) {
+		String outView = "employeelogin";
+
+		return outView;
+
 	}
 
 	@RequestMapping(value = "/employee/login.htm", method = RequestMethod.POST)

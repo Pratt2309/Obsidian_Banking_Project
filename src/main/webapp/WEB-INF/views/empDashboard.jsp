@@ -16,6 +16,7 @@
 		<button formaction="${contextPath}/emp/cs">Customer Summary</button>
 		<button formaction="${contextPath}/emp/cc">Customer Creation</button>
 		<button formaction="${contextPath}/logout">Logout</button>
+		<button formaction="${contextPath}/emp/cdp" formmethod="get">Logout</button>
 	</form>
 </body>
 </html>

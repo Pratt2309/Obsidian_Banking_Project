@@ -24,7 +24,7 @@ public class RequestWrapper extends HttpServletRequestWrapper {
     }
 	
 	public String sanitize(String input) {
-        String result = input.replaceAll("[-.\\+*?\\[^\\]$(){}=!<>|:\\\\]", "");
+        String result = input.replaceAll("[-.\\+*?\\[^\\]$%(){}=!<>|:\\\\]", "");
         return result;
     }
 }
